@@ -37,29 +37,25 @@ class TennisGame
 
     private function drawScore()
     {
-        switch ($this->player1Score) {
-            case 0:
-                return "Love-All";
-            case 1:
-                return "Fifteen-All";
-            case 2:
-                return "Thirty-All";
-            default:
-                return "Deuce";
+        if ($this->player1Score <= 2) {
+            $player1Score = $this->getTennisScoreName($this->player1Score);
+            return $player1Score . '-All';
         }
+
+        return "Deuce";
     }
 
     private function advantageScore()
-    {
+    {        
         $minusResult = $this->player1Score - $this->player2Score;
         if ($minusResult == 1) {
-            return "Advantage player1";
+            return "Advantage ".$this->player1Name;
         } elseif ($minusResult == -1) {
-            return "Advantage player2";
+            return "Advantage ".$this->player2Name;
         } elseif ($minusResult >= 2) {
-            return "Win for player1";
+            return "Win for ".$this->player1Name;
         } else {
-            return "Win for player2";
+            return "Win for ".$this->player2Name;
         }
     }
 
@@ -74,16 +70,14 @@ class TennisGame
 
     private function getTennisScoreName($score)
     {
-        switch ($score) {
-            case 0:
-                return "Love";
-            case 1:
-                return "Fifteen";
-            case 2:
-                return "Thirty";
-            case 3:
-                return "Forty";
-        }
+        $points = [
+            0 => 'Love',
+            1 => 'Fifteen',
+            2 => 'Thirty',
+            3 => 'Forty'
+        ];
+
+        return $points[$score];
     }
 
     private function hasAdvantage($score)
