@@ -4,8 +4,10 @@ namespace App\Repository;
 
 use App\Model\User;
 
-class InMemoryUserRepository
+class InMemoryUserRepository implements UserRepositoryInterface
 {
+    private static $instance;
+
     private $users;
 
     public function __construct()

@@ -6,6 +6,7 @@ use App\Model\User;
 use App\Repository\InMemoryUserRepository;
 use App\Domain\Entities\Email;
 use App\Domain\Entities\Password;
+use App\Domain\Builder\UserBuilder;
 use App\Domain\Actions\SendEmail;
 
 
@@ -22,9 +23,13 @@ class RegisterUser
             throw new \Exception("The email is already in use");
         }
 
-        $user = new User(uniqid(), $request->get('name'), $request->get('email'), $password->value());
-        $this->orm()->save($user);
-
+        $user_builder = new UserBuilder($this->orm());
+        $user = $user_builder
+            ->withEmail($request->get('email'))
+            ->withName($request->get('name'))
+            ->withPassword($password)
+            ->build();
+        
         $email = new Email(
             $request->get('email'),
             "Welcome to Codium",
@@ -37,7 +42,7 @@ class RegisterUser
 
     private function orm(): InMemoryUserRepository
     {
-        if (self::$orm == null) {
+        if (null === self::$orm) {
             self::$orm = new InMemoryUserRepository();
         }
         return self::$orm;

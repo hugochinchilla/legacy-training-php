@@ -15,6 +15,11 @@ class Password
         $this->password = $password;
     }       
 
+    public function __toString()
+    {
+        return $this->password;
+    }
+
     public function value()
     {
         return $this->password;

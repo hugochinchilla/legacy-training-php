@@ -18,7 +18,6 @@ class SendEmail
             $mail->Username = 'user@example.com';
             $mail->Password = 'secret';
 
-
             $mail->isHTML(true);
             $mail->setFrom($email->from());
 
