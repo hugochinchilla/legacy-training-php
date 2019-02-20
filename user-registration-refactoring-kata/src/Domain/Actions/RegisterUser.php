@@ -4,8 +4,8 @@ namespace App\Domain\Actions;
 
 use App\Model\User;
 use App\Repository\InMemoryUserRepository;
-use Symfony\Component\HttpFoundation\Response;
 use App\Domain\Entities\Email;
+use App\Domain\Entities\Password;
 use App\Domain\Actions\SendEmail;
 
 
@@ -16,16 +16,14 @@ class RegisterUser
 
     public function execute($request)
     {
-        if (strlen($request->get('password')) <= 8 || strpos($request->get('password'), '_') === false) {
-            throw new \Exception('Password is not valid');
-        }
+        $password = new Password($request->get('password'));
+
         if ($this->orm()->findByEmail($request->get('email')) !== null) {
             throw new \Exception("The email is already in use");
         }
 
-        $user = new User(rand(0, 10000), $request->get('name'), $request->get('email'), $request->get('password'));
+        $user = new User(uniqid(), $request->get('name'), $request->get('email'), $password->value());
         $this->orm()->save($user);
-
 
         $email = new Email(
             $request->get('email'),
@@ -35,7 +33,6 @@ class RegisterUser
 
         $send_email = new SendEmail();
         $send_email->execute($email);
-
     }
 
     private function orm(): InMemoryUserRepository

@@ -16,7 +16,6 @@ class Email
         $this->body = $body;
     }       
 
-
     public function from()
     {
         return $this->from;
