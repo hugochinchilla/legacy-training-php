@@ -44,7 +44,9 @@ class UsersStaticWebPageGenerator
 
         fwrite($f, "<main role=\"main\" class=\"inner cover\">");
         foreach ($users as $user) {
-            fwrite($f, "<h1 class=\"cover-heading\">" . $user->getName()."</h1>\n");
+            fwrite($f, "<h1 class=\"cover-heading\">" . $user->getName() . $this->generateScoreBadge($user) . "</h1>\n");
+            fwrite($f, $this->generateCityBadge($user));
+            fwrite($f, $this->generatePositionBadge($user));
             fwrite($f, "<p class=\"lead\">" . $user->getBiography() . "</p>\n");
         }
         fwrite($f, "</main>");
@@ -70,5 +72,31 @@ class UsersStaticWebPageGenerator
         fwrite($f, "</html>");
 
         fclose($f);
+    }
+
+    private function generateScoreBadge(User $user)
+    {
+        $score = $user->getScore();
+        return "<button type=\"button\" class=\"m-3 btn btn-warning\">Score <span class=\"badge badge-light\">" . $score . "</span><span class=\"sr-only\">keywords found</span></button>\n";
+    }
+
+    private function generateCityBadge(User $user)
+    {
+        $city = $user->getCity();
+        if (!$city) {
+            return;
+        }
+
+        return "<span class=\"badge badge-pill badge-info\">" . $city . "</span>";
+    }
+
+    private function generatePositionBadge(User $user)
+    {
+        $position = $user->getPosition();
+        if (!$position) {
+            return;
+        }
+
+        return "<span class=\"badge badge-pill badge-danger\">".$position."</span>";
     }
 }
