@@ -1,7 +1,8 @@
 <?php
-namespace App\Domain\Entities;
 
-class Email
+namespace App\Domain\Actions;
+
+class SendEmailRequest
 {
     private $from;
     private $to;

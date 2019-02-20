@@ -10,9 +10,10 @@ class UserRegistrationController
 {
     public function index(Request $request)
     {
-        $srv = new \App\Domain\Actions\RegisterUser();
         try {
-            $srv->execute($request);
+            $req = \App\Domain\Actions\RegisterUserRequest::fromRequest($request);
+            $srv = new \App\Domain\Actions\RegisterUser();            
+            $srv->execute($req);
         } catch (\Exception $e) {
             return new Response($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }

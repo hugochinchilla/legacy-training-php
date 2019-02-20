@@ -4,11 +4,10 @@ namespace App\Domain\Actions;
 
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use App\Domain\Entities\Email;
 
 class SendEmail
 {
-    public function execute(Email $email)
+    public function execute(SendEmailRequest $email)
     {
         try {
             $mail = new PHPMailer(true);
