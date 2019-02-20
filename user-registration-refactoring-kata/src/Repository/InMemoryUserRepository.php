@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Model\User;
 
-class DoctrineUserRepository
+class InMemoryUserRepository
 {
     private $users;
 

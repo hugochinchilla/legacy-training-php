@@ -3,14 +3,14 @@
 namespace App\Domain\Actions;
 
 use App\Model\User;
-use App\Repository\DoctrineUserRepository;
+use App\Repository\InMemoryUserRepository;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegisterUser
 {
-    /** @var DoctrineUserRepository */
+    /** @var InMemoryUserRepository */
     public static $orm;
 
     public function execute($request)
@@ -45,10 +45,10 @@ class RegisterUser
 
     }
 
-    private function orm(): DoctrineUserRepository
+    private function orm(): InMemoryUserRepository
     {
         if (self::$orm == null) {
-            self::$orm = new DoctrineUserRepository();
+            self::$orm = new InMemoryUserRepository();
         }
         return self::$orm;
     }    
