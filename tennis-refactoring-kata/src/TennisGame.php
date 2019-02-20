@@ -2,10 +2,12 @@
 
 class TennisGame
 {
-    private $m_score1 = 0;
-    private $m_score2 = 0;
+    private $player1Score = 0;
+    private $player2Score = 0;
     private $player1Name = '';
     private $player2Name = '';
+
+    const ADVANTAGE_TRESHOLD = 4;
 
     public function __construct($player1Name, $player2Name)
     {
@@ -15,66 +17,77 @@ class TennisGame
 
     public function wonPoint($playerName)
     {
-        if ('player1' == $playerName) {
-            $this->m_score1++;
+        if ($this->player1Name == $playerName) {
+            $this->player1Score++;
         } else {
-            $this->m_score2++;
+            $this->player2Score++;
         }
     }
 
     public function getScore()
     {
-        $score = "";
-        if ($this->m_score1 == $this->m_score2) {
-            switch ($this->m_score1) {
-                case 0:
-                    $score = "Love-All";
-                    break;
-                case 1:
-                    $score = "Fifteen-All";
-                    break;
-                case 2:
-                    $score = "Thirty-All";
-                    break;
-                default:
-                    $score = "Deuce";
-                    break;
-            }
-        } elseif ($this->m_score1 >= 4 || $this->m_score2 >= 4) {
-            $minusResult = $this->m_score1 - $this->m_score2;
-            if ($minusResult == 1) {
-                $score = "Advantage player1";
-            } elseif ($minusResult == -1) {
-                $score = "Advantage player2";
-            } elseif ($minusResult >= 2) {
-                $score = "Win for player1";
-            } else {
-                $score = "Win for player2";
-            }
+        if ($this->player1Score == $this->player2Score) {
+            return $this->drawScore();
+        } elseif ($this->hasAdvantage($this->player1Score) || $this->hasAdvantage($this->player2Score)) {
+            return $this->advantageScore();
         } else {
-            for ($i = 1; $i < 3; $i++) {
-                if ($i == 1) {
-                    $tempScore = $this->m_score1;
-                } else {
-                    $score .= "-";
-                    $tempScore = $this->m_score2;
-                }
-                switch ($tempScore) {
-                    case 0:
-                        $score .= "Love";
-                        break;
-                    case 1:
-                        $score .= "Fifteen";
-                        break;
-                    case 2:
-                        $score .= "Thirty";
-                        break;
-                    case 3:
-                        $score .= "Forty";
-                        break;
-                }
-            }
+            return $this->gameScore();
         }
+    }
+
+    private function drawScore()
+    {
+        switch ($this->player1Score) {
+            case 0:
+                return "Love-All";
+            case 1:
+                return "Fifteen-All";
+            case 2:
+                return "Thirty-All";
+            default:
+                return "Deuce";
+        }
+    }
+
+    private function advantageScore()
+    {
+        $minusResult = $this->player1Score - $this->player2Score;
+        if ($minusResult == 1) {
+            return "Advantage player1";
+        } elseif ($minusResult == -1) {
+            return "Advantage player2";
+        } elseif ($minusResult >= 2) {
+            return "Win for player1";
+        } else {
+            return "Win for player2";
+        }
+    }
+
+    private function gameScore()
+    {
+        $score = $this->getTennisScoreName($this->player1Score);
+        $score .= '-';
+        $score .= $this->getTennisScoreName($this->player2Score);
+
         return $score;
+    }
+
+    private function getTennisScoreName($score)
+    {
+        switch ($score) {
+            case 0:
+                return "Love";
+            case 1:
+                return "Fifteen";
+            case 2:
+                return "Thirty";
+            case 3:
+                return "Forty";
+        }
+    }
+
+    private function hasAdvantage($score)
+    {
+        return $score >= self::ADVANTAGE_TRESHOLD;
     }
 }
